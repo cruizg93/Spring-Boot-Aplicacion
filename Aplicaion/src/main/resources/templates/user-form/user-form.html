@@ -1,8 +1,10 @@
-<form class="form" role="form" autocomplete="off"  th:object="${userForm}">
+<form class="form" role="form" autocomplete="off"  th:object="${userForm}" th:action="@{/userForm}" method="post">
 	<div class="form-group row">
 		<label class="col-lg-3 col-form-label form-control-label">First name</label>
 		<div class="col-lg-9">
 			<input class="form-control" type="text" th:field="${userForm.firstName}" >
+					<div class="alert-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Name Error</div>
+	
 		</div>
 	</div>
 	<div class="form-group row">
@@ -10,18 +12,22 @@
 			name</label>
 		<div class="col-lg-9">
 			<input class="form-control" type="text" th:field="${userForm.lastName}" >
+			<div class="alert-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Name Error</div>
+	
 		</div>
 	</div>
 	<div class="form-group row">
 		<label class="col-lg-3 col-form-label form-control-label">Email</label>
 		<div class="col-lg-9">
 			<input class="form-control" type="email" th:field="${userForm.email}">
+			<div class="alert-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Name Error</div>
 		</div>
 	</div>
 	<div class="form-group row">
 		<label class="col-lg-3 col-form-label form-control-label">Username</label>
 		<div class="col-lg-9">
 			<input class="form-control" type="text" th:field="${userForm.username}">
+			<div class="alert-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Name Error</div>
 		</div>
 	</div>
 	<div class="form-group row">
@@ -31,6 +37,7 @@
 				<option th:each="role :${roles}" th:value="${role.id}" th:text="${role.name}">
 				</option>
 			</select>
+			<div class="alert-danger" th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}">Name Error</div>
 		</div>
 	</div>
 	
@@ -38,19 +45,22 @@
 		<label class="col-lg-3 col-form-label form-control-label">Password</label>
 		<div class="col-lg-9">
 			<input class="form-control" type="password" th:field="${userForm.password}">
+			<div class="alert-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Name Error</div>
 		</div>
 	</div>
 	<div class="form-group row">
 		<label class="col-lg-3 col-form-label form-control-label">Confirm</label>
 		<div class="col-lg-9">
 			<input class="form-control" type="password" th:field="${userForm.confirmPassword}" >
+			<div class="alert-danger" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}">Name Error</div>
 		</div>
 	</div>
 	<div class="form-group row">
 		<div class="col-lg-12 text-center">
 			<input type="reset" class="btn btn-secondary" value="Cancel">
-			<input type="button" class="btn btn-primary"
+			<input type="submit" class="btn btn-primary"
 				value="Save Changes">
 		</div>
 	</div>
+	<div class="alert alert-danger text-center" th:if="${formErrorMessage}" th:text="${formErrorMessage}">Error MEssage</div>
 </form>
