@@ -24,4 +24,17 @@
 		</tr>
 		</tbody>
 	</table>
+	<div class="alert alert-danger text-center" th:if="${listErrorMessage}" th:text="${listErrorMessage}">Error MEssage</div>
 </div>
+
+<script type="text/javascript">
+function confirmDelete(id){
+	$('#deleteModal').modal('show');
+	$("#userIdHiddenInput").val(id);
+}
+
+function deleteUser(){
+	var id = $("#userIdHiddenInput").val();
+    window.location = "deleteUser/"+id;
+}
+</script>
