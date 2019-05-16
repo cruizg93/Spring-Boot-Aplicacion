@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cristianRuizBlog.aplicacion.dto.ChangePasswordForm;
 import com.cristianRuizBlog.aplicacion.entity.User;
 import com.cristianRuizBlog.aplicacion.repository.UserRepository;
 
@@ -78,5 +79,25 @@ public class UserServiceImpl implements UserService{
 	public void deleteUser(Long id) throws Exception {
 		User user = getUserById(id);
 		repository.delete(user);
+	}
+
+	@Override
+	public User changePassword(ChangePasswordForm form) throws Exception {
+		User user = getUserById(form.getId());
+		
+		if ( !user.getPassword().equals(form.getCurrentPassword())) {
+			throw new Exception ("Current Password invalido.");
+		}
+		
+		if( user.getPassword().equals(form.getNewPassword())) {
+			throw new Exception ("Nuevo debe ser diferente al password actual.");
+		}
+		
+		if( !form.getNewPassword().equals(form.getConfirmPassword())) {
+			throw new Exception ("Nuevo Password y Current Password no coinciden.");
+		}
+		
+		user.setPassword(form.getNewPassword());
+		return repository.save(user);
 	}
 }

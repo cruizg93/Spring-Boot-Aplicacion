@@ -62,9 +62,11 @@
 	<div class="form-group row">
 		<div class="col-lg-12 text-center">
 			<a class="btn btn-secondary"  th:href="@{'/userForm/cancel'}">Cancel</a>
+			<button type="button" class="btn btn-secondary" data-toggle="modal" th:if="${editMode}" data-target="#changePasswordModal">Change Password</button>
 			<input type="submit" class="btn btn-primary"
 				value="Save Changes" th:value="${editMode}?'Save User':'Create User'">
 		</div>
 	</div>
 	<div class="alert alert-danger text-center" th:if="${formErrorMessage}" th:text="${formErrorMessage}">Error MEssage</div>
+	<div class="alert alert-success text-center d-none" id="formSuccess" th:if="${editMode}" >Success MEssage</div>
 </form>
