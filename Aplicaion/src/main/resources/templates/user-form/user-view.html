@@ -48,6 +48,9 @@
 			<li class="nav-item">
 			<a class="nav-link" th:classappend=" ${formTab}" id="form-tab" data-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Form</a>				   	
 			</li>
+			<li class="nav-item">
+			<a class="nav-link" href="#" th:href="@{/logout}"><span th:text="${#authentication.getPrincipal().getUsername()}"></span> - <span>logout  </span><span class="float-right"><i class="fas fa-sign-out-alt"></i></span></a>				   	
+			</li>
 		</ul>
 		<div class="tab-content" id="myTabContent">
 			<div class="tab-pane fade show" th:classappend=" ${listTab}" id="list" role="tabpanel" aria-labelledby="list-tab">
