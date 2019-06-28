@@ -6,6 +6,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.cristianRuizBlog.aplicacion.Exception.UsernameOrIdNotFound;
 import com.cristianRuizBlog.aplicacion.dto.ChangePasswordForm;
 import com.cristianRuizBlog.aplicacion.entity.User;
 import com.cristianRuizBlog.aplicacion.repository.RoleRepository;
@@ -124,8 +127,9 @@ public class UserController {
 	public String deleteUser(Model model, @PathVariable(name="id")Long id) {
 		try {
 			userService.deleteUser(id);
-		} catch (Exception e) {
-			model.addAttribute("listErrorMessage",e.getMessage());
+		} 
+		catch (UsernameOrIdNotFound uoin) {
+			model.addAttribute("listErrorMessage",uoin.getMessage());
 		}
 		return userForm(model);
 	}
