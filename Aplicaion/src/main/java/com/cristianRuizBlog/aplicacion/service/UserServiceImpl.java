@@ -54,6 +54,8 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public User createUser(User user) throws Exception {
 		if (checkUsernameAvailable(user) && checkPasswordValid(user)) {
+			String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+			user.setPassword(encodedPassword);
 			user = repository.save(user);
 		}
 		return user;
@@ -115,15 +117,37 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	private boolean isLoggedUserADMIN() {
+		//Obtener el usuario logeado
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
 		UserDetails loggedUser = null;
+		Object roles = null;
+
+		//Verificar que ese objeto traido de sesion es el usuario
 		if (principal instanceof UserDetails) {
 			loggedUser = (UserDetails) principal;
-		
-			loggedUser.getAuthorities().stream()
-					.filter(x -> "ADMIN".equals(x.getAuthority() ))      
-					.findFirst().orElse(null); //loggedUser = null;
+
+			roles = loggedUser.getAuthorities().stream()
+					.filter(x -> "ROLE_ADMIN".equals(x.getAuthority())).findFirst()
+					.orElse(null); 
 		}
-		return loggedUser != null ?true :false;
+		return roles != null ? true : false;
+	}
+	
+	private User getLoggedUser() throws Exception {
+		//Obtener el usuario logeado
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		UserDetails loggedUser = null;
+
+		//Verificar que ese objeto traido de sesion es el usuario
+		if (principal instanceof UserDetails) {
+			loggedUser = (UserDetails) principal;
+		}
+		
+		User myUser = repository
+				.findByUsername(loggedUser.getUsername()).orElseThrow(() -> new Exception("Error obteniendo el usuario logeado desde la sesion."));
+		
+		return myUser;
 	}
 }
