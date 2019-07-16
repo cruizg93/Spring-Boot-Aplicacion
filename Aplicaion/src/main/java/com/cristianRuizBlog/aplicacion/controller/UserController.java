@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.cristianRuizBlog.aplicacion.Exception.CustomeFieldValidationException;
 import com.cristianRuizBlog.aplicacion.Exception.UsernameOrIdNotFound;
 import com.cristianRuizBlog.aplicacion.dto.ChangePasswordForm;
 import com.cristianRuizBlog.aplicacion.entity.User;
@@ -61,7 +62,13 @@ public class UserController {
 				model.addAttribute("userForm", new User());
 				model.addAttribute("listTab","active");
 				
-			} catch (Exception e) {
+			} catch (CustomeFieldValidationException cfve) {
+				result.rejectValue(cfve.getFieldName(), null, cfve.getMessage());
+				model.addAttribute("userForm", user);
+				model.addAttribute("formTab","active");
+				model.addAttribute("userList", userService.getAllUsers());
+				model.addAttribute("roles",roleRepository.findAll());
+			}catch (Exception e) {
 				model.addAttribute("formErrorMessage",e.getMessage());
 				model.addAttribute("userForm", user);
 				model.addAttribute("formTab","active");
