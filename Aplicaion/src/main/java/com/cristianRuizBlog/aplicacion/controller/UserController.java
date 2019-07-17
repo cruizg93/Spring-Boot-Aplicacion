@@ -42,6 +42,14 @@ public class UserController {
 		return "index";
 	}
 	
+	@GetMapping("/signup")
+	public String signUp(Model model) {
+		model.addAttribute("signup",true);
+		model.addAttribute("role_user_id",1);
+		model.addAttribute("userForm", new User());
+		return "user-form/user-signup";
+	}
+	
 	@GetMapping("/userForm")
 	public String userForm(Model model) {
 		model.addAttribute("userForm", new User());
