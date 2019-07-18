@@ -25,7 +25,7 @@ public class WebSecurityConfig  extends  WebSecurityConfigurerAdapter{
     	http
         .authorizeRequests()
         .antMatchers(resources).permitAll()  
-        .antMatchers("/","/index","/signup").permitAll()
+        .antMatchers("/","/index").permitAll()
             .anyRequest().authenticated()
             .and()
         .formLogin()

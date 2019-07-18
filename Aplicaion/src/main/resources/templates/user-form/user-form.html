@@ -42,11 +42,7 @@
 	<div class="form-group row">
 		<label th:text="Roles" class="col-lg-3 col-form-label form-control-label"></label>
 		<div class="col-lg-9">
-			<div th:if="${signup}">
-				<label>User</label>
-				<input type="hidden" th:field="${userForm.roles}" th:value="${role_user_id}">
-			</div>
-			<select th:unless="${signup}" class="form-control" size="3" th:field="${userForm.roles}" th:disabled="${disableFields}">
+			<select class="form-control" size="3" th:field="${userForm.roles}" th:disabled="${disableFields}">
 				<option th:each="role :${roles}" th:value="${role.id}" th:text="${role.name}">
 				</option>
 			</select>
