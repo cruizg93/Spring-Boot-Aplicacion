@@ -1,6 +1,6 @@
 <div th:with="disableFields=!${editMode} and ${#authorization.expression('hasRole(''ROLE_USER'')')}">
 
-<form class="form" role="form" autocomplete="off"  th:object="${userForm}" th:action="${editMode} ?@{/editUser} :@{/userForm}" method="post">
+<form class="form" role="form" autocomplete="off"  th:object="${userForm}" th:action="${signup}?@{/signup}:(${editMode} ?@{/editUser} :@{/userForm})" method="post">
 	<!--Es necesario para poder pasar la validacion del Model-->
 	<input class="form-control" type=hidden th:field="${userForm.id}"  th:if="${editMode}">
 	<input class="form-control" type=hidden name="password" value="xxxx" th:if="${editMode}">
@@ -42,11 +42,7 @@
 	<div class="form-group row">
 		<label th:text="Roles" class="col-lg-3 col-form-label form-control-label"></label>
 		<div class="col-lg-9">
-			<div th:if="${signup}">
-				<label>User</label>
-				<input type="hidden" th:field="${userForm.roles}" th:value="${role_user_id}">
-			</div>
-			<select th:unless="${signup}" class="form-control" size="3" th:field="${userForm.roles}" th:disabled="${disableFields}">
+			<select class="form-control" th:size="${signup}?1:3" th:field="${userForm.roles}" th:disabled="${disableFields}">
 				<option th:each="role :${roles}" th:value="${role.id}" th:text="${role.name}">
 				</option>
 			</select>

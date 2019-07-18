@@ -1,5 +1,7 @@
 package com.cristianRuizBlog.aplicacion.controller;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.cristianRuizBlog.aplicacion.Exception.CustomeFieldValidationException;
 import com.cristianRuizBlog.aplicacion.Exception.UsernameOrIdNotFound;
 import com.cristianRuizBlog.aplicacion.dto.ChangePasswordForm;
+import com.cristianRuizBlog.aplicacion.entity.Role;
 import com.cristianRuizBlog.aplicacion.entity.User;
 import com.cristianRuizBlog.aplicacion.repository.RoleRepository;
 import com.cristianRuizBlog.aplicacion.service.UserService;
@@ -43,12 +46,39 @@ public class UserController {
 	}
 	
 	@GetMapping("/signup")
-	public String signUp(Model model) {
+	public String signup(Model model) {
+		Role userRole = roleRepository.findByName("USER");
+		List<Role> roles = Arrays.asList(userRole);
+		
 		model.addAttribute("signup",true);
-		model.addAttribute("role_user_id",1);
 		model.addAttribute("userForm", new User());
+		model.addAttribute("roles",roles);
 		return "user-form/user-signup";
 	}
+	
+	@PostMapping("/signup")
+	public String signupAction(@Valid @ModelAttribute("userForm")User user, BindingResult result, ModelMap model) {
+		Role userRole = roleRepository.findByName("USER");
+		List<Role> roles = Arrays.asList(userRole);
+		model.addAttribute("userForm", user);
+		model.addAttribute("roles",roles);
+		model.addAttribute("signup",true);
+		
+		if(result.hasErrors()) {
+			return "user-form/user-signup";
+		}else {
+			try {
+				userService.createUser(user);
+			} catch (CustomeFieldValidationException cfve) {
+				result.rejectValue(cfve.getFieldName(), null, cfve.getMessage());
+			}catch (Exception e) {
+				model.addAttribute("formErrorMessage",e.getMessage());
+			}
+		}
+		return index();
+	}
+	
+	
 	
 	@GetMapping("/userForm")
 	public String userForm(Model model) {
