@@ -85,6 +85,7 @@ public class UserServiceImpl implements UserService{
 		to.setLastName(from.getLastName());
 		to.setEmail(from.getEmail());
 		to.setRoles(from.getRoles());
+		to.setCity(from.getCity());
 	}
 
 	@Override

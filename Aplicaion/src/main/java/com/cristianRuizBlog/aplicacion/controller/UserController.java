@@ -8,26 +8,22 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.cristianRuizBlog.aplicacion.Exception.CustomeFieldValidationException;
 import com.cristianRuizBlog.aplicacion.Exception.UsernameOrIdNotFound;
 import com.cristianRuizBlog.aplicacion.dto.ChangePasswordForm;
 import com.cristianRuizBlog.aplicacion.entity.Role;
 import com.cristianRuizBlog.aplicacion.entity.User;
+import com.cristianRuizBlog.aplicacion.repository.CountryRepository;
 import com.cristianRuizBlog.aplicacion.repository.RoleRepository;
 import com.cristianRuizBlog.aplicacion.service.UserService;
 
@@ -39,6 +35,9 @@ public class UserController {
 	
 	@Autowired
 	RoleRepository roleRepository;
+	
+	@Autowired
+	CountryRepository countryRepository;
 	
 	@GetMapping({"/","/login"})
 	public String index() {
@@ -86,6 +85,7 @@ public class UserController {
 		model.addAttribute("userList", userService.getAllUsers());
 		model.addAttribute("roles",roleRepository.findAll());
 		model.addAttribute("listTab","active");
+		model.addAttribute("countries",countryRepository.findAllByOrderByCodeAsc());
 		return "user-form/user-view";
 	}
 	
@@ -99,24 +99,26 @@ public class UserController {
 				userService.createUser(user);
 				model.addAttribute("userForm", new User());
 				model.addAttribute("listTab","active");
-				
 			} catch (CustomeFieldValidationException cfve) {
 				result.rejectValue(cfve.getFieldName(), null, cfve.getMessage());
 				model.addAttribute("userForm", user);
 				model.addAttribute("formTab","active");
 				model.addAttribute("userList", userService.getAllUsers());
 				model.addAttribute("roles",roleRepository.findAll());
+				model.addAttribute("countries",countryRepository.findAllByOrderByCodeAsc());
 			}catch (Exception e) {
 				model.addAttribute("formErrorMessage",e.getMessage());
 				model.addAttribute("userForm", user);
 				model.addAttribute("formTab","active");
 				model.addAttribute("userList", userService.getAllUsers());
 				model.addAttribute("roles",roleRepository.findAll());
+				model.addAttribute("countries",countryRepository.findAllByOrderByCodeAsc());
 			}
 		}
 		
 		model.addAttribute("userList", userService.getAllUsers());
 		model.addAttribute("roles",roleRepository.findAll());
+		model.addAttribute("countries",countryRepository.findAllByOrderByCodeAsc());
 		return "user-form/user-view";
 	}
 	
@@ -130,6 +132,7 @@ public class UserController {
 		model.addAttribute("formTab","active");
 		model.addAttribute("editMode","true");
 		model.addAttribute("passwordForm",new ChangePasswordForm(id));
+		model.addAttribute("countries",countryRepository.findAllByOrderByCodeAsc());
 		
 		return "user-form/user-view";
 	}
@@ -154,6 +157,7 @@ public class UserController {
 				model.addAttribute("roles",roleRepository.findAll());
 				model.addAttribute("editMode","true");
 				model.addAttribute("passwordForm",new ChangePasswordForm(user.getId()));
+				model.addAttribute("countries",countryRepository.findAllByOrderByCodeAsc());
 			}
 		}
 		
