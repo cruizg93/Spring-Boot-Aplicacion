@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -58,6 +59,11 @@ public class User implements Serializable{
 			joinColumns=@JoinColumn(name="user_id"),
 			inverseJoinColumns=@JoinColumn(name="role_id"))
 	private Set<Role> roles;
+	
+	@NotNull
+	@ManyToOne
+    @JoinColumn(name = "city_id")
+	private City city;
 
 	public User() {
 		super();
@@ -130,6 +136,14 @@ public class User implements Serializable{
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}
+	
+	public City getCity() {
+		return city;
+	}
+
+	public void setCity(City city) {
+		this.city = city;
 	}
 
 	@Override
