@@ -40,13 +40,33 @@
 		</div>
 	</div>
 	<div class="form-group row">
-		<label th:text="Roles" class="col-lg-3 col-form-label form-control-label"></label>
+		<label th:text="Roles" class="col-lg-3 col-form-label form-control-label">Roles</label>
 		<div class="col-lg-9">
 			<select class="form-control" th:size="${signup}?1:3" th:field="${userForm.roles}" th:disabled="${disableFields}">
 				<option th:each="role :${roles}" th:value="${role.id}" th:text="${role.name}">
 				</option>
 			</select>
 			<div class="alert-danger" th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}">Name Error</div>
+		</div>
+	</div>
+	
+	<div class="form-group row">
+		<label th:text="Country" class="col-lg-3 col-form-label form-control-label">Country</label>
+		<div class="col-lg-9">
+			<select class="form-control" th:disabled="${disableFields}" id="country" onchange="fetchCities(this.value)">
+				<option></option>
+				<option th:each="country :${countries}" th:value="${country.id}" th:text="${country.code} + ' - '+ ${country.name}">
+				</option>
+			</select>
+		</div>
+	</div>
+	
+	<div class="form-group row">
+		<label th:text="City" class="col-lg-3 col-form-label form-control-label">City</label>
+		<div class="col-lg-9">
+			<select class="form-control" th:size="1" th:field="${userForm.city}" th:disabled="${disableFields}">
+			</select>
+			<div class="alert-danger" th:if="${#fields.hasErrors('city')}" th:errors="*{city}">Name Error</div>
 		</div>
 	</div>
 	
@@ -76,3 +96,56 @@
 	<div class="alert alert-success text-center d-none" id="formSuccess" th:if="${editMode}" >Success MEssage</div>
 </form>
 </div>
+
+<script th:inline="javascript">
+
+/*<![CDATA[*/
+    var editMode = /*[[${editMode}]]*/ 'false';
+/*]]>*/
+
+$(document).ready(function(){
+	
+	if (editMode == 'true' || editMode == true){
+		loadUserCity();
+	}
+})
+
+function loadUserCity(){
+/*<![CDATA[*/
+   	var cityId = /*[[${userForm.city != null? userForm.city.id :'0'}]]*/ '0';
+   	var countryId = /*[[${userForm.city != null? userForm.city.country.id : '0'}]]*/ '0';
+/*]]>*/
+   	
+   	$("#country").val(countryId);
+   	fetchCities(countryId, cityId);
+}
+
+function fetchCities(countryID, cityID){
+	
+	$.ajax({
+        type: "GET",
+        contentType: "application/json",
+        url: "/dropList/loadCities/"+countryID,
+        dataType: 'text',
+        cache: false,
+        timeout: 600000,
+        success: function (data) {
+        	var cities = $.parseJSON(data);
+        	$("#city").html("");
+        	for( var i=0; i<cities.length; i++){
+        		if (cities[i].id == cityID){
+        			$("#city").append(new Option(cities[i].name, cities[i].id,true,false));
+        			$("#city").val(cityID);
+        		}else{
+        			$("#city").append(new Option(cities[i].name, cities[i].id));
+        		}
+       			
+        	}
+        },
+        error: function (e) {
+			alert(e);
+			console.log(e);
+       	}
+    });
+}
+</script>
